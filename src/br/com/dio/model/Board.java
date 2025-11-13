@@ -2,6 +2,7 @@ package br.com.dio.model;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static br.com.dio.model.GameStatusEnum.COMPLETE;
 import static br.com.dio.model.GameStatusEnum.INCOMPLETE;
@@ -60,6 +61,27 @@ public class Board {
 
     public void reset(){
         spaces.forEach(c -> c.forEach(Space::clearSpace));
+    }
+
+    public boolean provideHint(){
+        // Procura por um espaço que:
+        // 1. Não seja fixo (!s.isFixed())
+        // 2. Esteja vazio (isNull(s.getActual())) OU tenha um valor diferente do esperado
+        Optional<Space> spaceToHint = spaces.stream()
+                .flatMap(Collection::stream)
+                .filter(s -> !s.isFixed() && (isNull(s.getActual()) || !s.getActual().equals(s.getExpected())))
+                .findFirst(); // Pega o primeiro que encontrar
+
+        // Se encontrou um espaço elegível...
+        if (spaceToHint.isPresent()){
+            Space space = spaceToHint.get();
+            // ...define o valor 'actual' dele como o valor 'expected'
+            space.setActual(space.getExpected());
+            return true; // Retorna true (dica foi dada)
+        }
+
+        // Não encontrou espaços para dar dica (provavelmente o jogo está completo)
+        return false; // Retorna false (dica não foi dada)
     }
 
     public boolean gameIsFinished(){

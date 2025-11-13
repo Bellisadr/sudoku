@@ -38,7 +38,8 @@ public class Main {
             System.out.println("5 - Verificar status do jogo");
             System.out.println("6 - limpar jogo");
             System.out.println("7 - Finalizar jogo");
-            System.out.println("8 - Sair");
+            System.out.println("8 - Pedir Dica");
+            System.out.println("9 - Sair");
 
             option = scanner.nextInt();
 
@@ -50,7 +51,8 @@ public class Main {
                 case 5 -> showGameStatus();
                 case 6 -> clearGame();
                 case 7 -> finishGame();
-                case 8 -> System.exit(0);
+                case 8 -> giveHint();
+                case 9 -> System.exit(0);
                 default -> System.out.println("Opção inválida, selecione uma das opções do menu");
             }
         }
@@ -174,6 +176,20 @@ public class Main {
             System.out.println("Seu jogo conté, erros, verifique seu board e ajuste-o");
         } else {
             System.out.println("Você ainda precisa preenhcer algum espaço");
+        }
+    }
+
+    private static void giveHint() {
+        if (isNull(board)){
+            System.out.println("O jogo ainda não foi iniciado iniciado");
+            return;
+        }
+
+        if (board.provideHint()){
+            System.out.println("Dica aplicada!");
+            showCurrentGame(); // Mostra o tabuleiro atualizado com a dica
+        } else {
+            System.out.println("Não foi possível adicionar uma dica (O tabuleiro pode estar completo ou sem erros).");
         }
     }
 
