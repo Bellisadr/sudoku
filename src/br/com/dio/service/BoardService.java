@@ -38,6 +38,10 @@ public class BoardService {
         return board.gameIsFinished();
     }
 
+    public boolean provideHint() {
+        return this.board.provideHint();
+    }
+
     private List<List<Space>> initBoard(final Map<String, String> gameConfig) {
         List<List<Space>> spaces = new ArrayList<>();
         for (int i = 0; i < BOARD_LIMIT; i++) {

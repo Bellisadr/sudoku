@@ -6,6 +6,7 @@ import br.com.dio.service.EventEnum;
 import br.com.dio.service.NotifierService;
 import br.com.dio.ui.custom.button.CheckGameStatusButton;
 import br.com.dio.ui.custom.button.FinishGameButton;
+import br.com.dio.ui.custom.button.HintButton;
 import br.com.dio.ui.custom.button.ResetButton;
 import br.com.dio.ui.custom.frame.MainFrame;
 import br.com.dio.ui.custom.input.NumberText;
@@ -37,6 +38,7 @@ public class MainScreen {
     private JButton checkGameStatusButton;
     private JButton finishGameButton;
     private JButton resetButton;
+    private JButton hintButton;
 
     public MainScreen(final Map<String, String> gameConfig) {
         this.boardService = new BoardService(gameConfig);
@@ -58,6 +60,7 @@ public class MainScreen {
         addResetButton(mainPanel);
         addCheckGameStatusButton(mainPanel);
         addFinishGameButton(mainPanel);
+        addHintButton(mainPanel);
         mainFrame.revalidate();
         mainFrame.repaint();
     }
@@ -87,6 +90,7 @@ public class MainScreen {
                 resetButton.setEnabled(false);
                 checkGameStatusButton.setEnabled(false);
                 finishGameButton.setEnabled(false);
+                hintButton.setEnabled(false);
             } else {
                 var message = "Seu jogo tem alguma inconsistência, ajuste e tente novamente";
                 showMessageDialog(null, message);
@@ -127,4 +131,22 @@ public class MainScreen {
         mainPanel.add(resetButton);
     }
 
+
+
+    private void addHintButton(final JPanel mainPanel) {
+        hintButton = new HintButton(e -> {
+
+            boolean hintGiven = boardService.provideHint();
+
+            if (hintGiven) {
+                showMessageDialog(null, "Dica aplicada!");
+
+                notifierService.notify(CLEAR_SPACE);
+
+            } else {
+                showMessageDialog(null, "Não foi possível aplicar uma dica (O tabuleiro pode estar completo).");
+            }
+        });
+        mainPanel.add(hintButton);
+    }
 }

@@ -9,6 +9,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Color;
 
 import static br.com.dio.service.EventEnum.CLEAR_SPACE;
 import static java.awt.Font.PLAIN;
@@ -26,12 +27,9 @@ public class NumberText extends JTextField implements EventListener {
         this.setFont(new Font("Arial", PLAIN, 20));
         this.setHorizontalAlignment(CENTER);
         this.setDocument(new NumberTextLimit());
-        this.setEnabled(!space.isFixed());
-        if (space.isFixed()){
-            this.setText(space.getActual().toString());
-        }
-        this.getDocument().addDocumentListener(new DocumentListener() {
 
+
+        this.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(final DocumentEvent e) {
                 changeSpace();
@@ -52,16 +50,41 @@ public class NumberText extends JTextField implements EventListener {
                     space.clearSpace();
                     return;
                 }
-                space.setActual(Integer.parseInt(getText()));
+                if (!space.isHint()) {
+                    space.setActual(Integer.parseInt(getText()));
+                }
             }
-
         });
+
+        refreshState();
     }
 
     @Override
     public void update(final EventEnum eventType) {
-        if (eventType.equals(CLEAR_SPACE) && (this.isEnabled())){
+        if (eventType.equals(CLEAR_SPACE)){
+            refreshState();
+        }
+    }
+
+    private void refreshState() {
+        if (space.getActual() == null) {
             this.setText("");
+        } else {
+            this.setText(space.getActual().toString());
+        }
+
+        if (space.isFixed()) {
+            this.setForeground(Color.BLACK);
+            this.setEditable(false);
+            this.setEnabled(false);
+        } else if (space.isHint()) {
+            this.setForeground(Color.BLUE);
+            this.setEditable(false);
+            this.setEnabled(true);
+        } else {
+            this.setForeground(Color.BLACK);
+            this.setEditable(true);
+            this.setEnabled(true);
         }
     }
 }

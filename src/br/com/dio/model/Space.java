@@ -5,6 +5,7 @@ public class Space {
     private Integer actual;
     private final int expected;
     private final boolean fixed;
+    private boolean isHint = false;
 
 
     public Space(final int expected, final boolean fixed) {
@@ -26,6 +27,7 @@ public class Space {
 
     public void clearSpace(){
         setActual(null);
+        this.isHint = false;
     }
 
     public int getExpected() {
@@ -34,5 +36,14 @@ public class Space {
 
     public boolean isFixed() {
         return fixed;
+    }
+
+    public boolean isHint() {
+        return isHint;
+    }
+
+    public void setAsHint() {
+        if (fixed) return;
+        this.isHint = true;
     }
 }

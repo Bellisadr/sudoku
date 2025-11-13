@@ -64,24 +64,19 @@ public class Board {
     }
 
     public boolean provideHint(){
-        // Procura por um espaço que:
-        // 1. Não seja fixo (!s.isFixed())
-        // 2. Esteja vazio (isNull(s.getActual())) OU tenha um valor diferente do esperado
-        Optional<Space> spaceToHint = spaces.stream()
+               Optional<Space> spaceToHint = spaces.stream()
                 .flatMap(Collection::stream)
                 .filter(s -> !s.isFixed() && (isNull(s.getActual()) || !s.getActual().equals(s.getExpected())))
-                .findFirst(); // Pega o primeiro que encontrar
+                .findFirst();
 
-        // Se encontrou um espaço elegível...
         if (spaceToHint.isPresent()){
             Space space = spaceToHint.get();
-            // ...define o valor 'actual' dele como o valor 'expected'
             space.setActual(space.getExpected());
-            return true; // Retorna true (dica foi dada)
+            space.setAsHint();
+            return true;
         }
 
-        // Não encontrou espaços para dar dica (provavelmente o jogo está completo)
-        return false; // Retorna false (dica não foi dada)
+        return false;
     }
 
     public boolean gameIsFinished(){

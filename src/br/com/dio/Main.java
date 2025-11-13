@@ -187,7 +187,7 @@ public class Main {
 
         if (board.provideHint()){
             System.out.println("Dica aplicada!");
-            showCurrentGame(); // Mostra o tabuleiro atualizado com a dica
+            showCurrentGame();
         } else {
             System.out.println("Não foi possível adicionar uma dica (O tabuleiro pode estar completo ou sem erros).");
         }
